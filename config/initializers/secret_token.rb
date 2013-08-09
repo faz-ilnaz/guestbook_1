@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-Guestbook1::Application.config.secret_key_base = '7eda1f66a6897d1d0170ea441efa05bde1ca9d0783a16d0cdc05a92254438bf34f5b9a48868c8980ee7917655d31ffec82d8e9182479a15a68e7a1651493450a'
+Guestbook1::Application.config.secret_key_base = '18dfd5e1005f6f7f492936cc743f98063a49e3060241ac7567ed7af700fe753554ca5f9f19e260ace86a220b39fa6782247f1b85117ae488cace27cf893560de'
