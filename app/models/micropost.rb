@@ -1,5 +1,5 @@
 class Micropost < ActiveRecord::Base
-	validates :content, presence: true, length: { maximum: 1000 }
+	validates :content, presence: true, length: { maximum: 1500 }
 	validates :user_id, presence: true
 	belongs_to :user
 
