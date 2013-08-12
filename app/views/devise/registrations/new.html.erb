@@ -1,22 +1,25 @@
 <% provide(:title, 'Sign up') %>
 <h2>Sign up</h2>
+<div class="row">
+  <div class="span5 offset3">
+    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+      <%= devise_error_messages! %>
 
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-  <%= devise_error_messages! %>
+      <div><%= f.label :name %>
+      <%= f.text_field :name, :autofocus => true %></div><br />
 
-  <div><%= f.label :name %><br />
-  <%= f.text_field :name, :autofocus => true %></div>
+      <div><%= f.label :email %>
+      <%= f.email_field :email %></div><br />
 
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email %></div>
+      <div><%= f.label :password %>
+      <%= f.password_field :password %></div><br />
 
-  <div><%= f.label :password %><br />
-  <%= f.password_field :password %></div>
+      <div><%= f.label :password_confirmation %>
+      <%= f.password_field :password_confirmation %></div><br />
 
-  <div><%= f.label :password_confirmation %><br />
-  <%= f.password_field :password_confirmation %></div>
+      <div><%= f.submit "Create my account" %></div>
+    <% end %>
 
-  <div><%= f.submit "Create my account" %></div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+    <%= render "devise/shared/links" %>
+  </div>
+</div>
