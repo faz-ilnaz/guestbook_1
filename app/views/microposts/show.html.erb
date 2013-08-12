@@ -1,38 +1,10 @@
 <% provide(:title, 'Guest book') %>
 <% if user_signed_in? %>
 
-  <div class="row">
-    <aside class="span4">
-      <section>
-        <%= render 'shared/user_info' %>
-      </section>
-      <section>
-        <%= render 'shared/micropost_form' %>
-      </section>
-    </aside>
-    
-    <div class="span8">
-      <% if @microposts.any? %>
-
-        <h3>Microposts (<%= @microposts.count %>)</h3>
-        <ol class="microposts">
-          <%= render @microposts %>
-        </ol>
-        <%= will_paginate @microposts %>
-
-      <% end %>
-    </div>
-  </div>
+  <%= render 'for_signed_users' %>
 
 <% else %>
 
-  <div class="center hero-unit">
-    <h1>Welcome to the Guest book</h1>
-    <h2>
-      This is the home page for the Guest book sample application.
-    </h2>
-
-    <%= link_to "Sign up now!", new_user_registration_path, class: "btn btn-large btn-primary" %>
-  </div>
+  <%= render 'shared/welcome' %>
 
 <% end %>

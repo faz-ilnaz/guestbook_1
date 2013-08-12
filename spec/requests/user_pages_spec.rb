@@ -90,11 +90,7 @@ describe "UserPages" do
 
 	    describe "with valid information" do
 	      let(:user) { FactoryGirl.create(:user) }
-	      before do
-	        fill_in "Email",    with: user.email.upcase
-	        fill_in "Password", with: user.password
-	        click_button "Sign in"
-	      end
+	      before { sign_in user}
 
 	      it { should have_selector('title', text: 'Guest book') }
 	      it { should have_link('Profile', href: edit_user_registration_path) }
@@ -112,21 +108,21 @@ describe "UserPages" do
 		    describe "for non-signed-in users" do
 		      let(:user) { FactoryGirl.create(:user) }
 
-		      # describe "when attempting to visit a protected page" do
-		      #   before do
-		      #     visit edit_user_registration_path
-		      #     fill_in "Email",    with: user.email
-		      #     fill_in "Password", with: user.password
-		      #     click_button "Sign in"
-		      #   end
+		      describe "when attempting to visit a protected page" do
+		        before do
+		          visit edit_user_registration_path
+		          fill_in "Email",    with: user.email
+		          fill_in "Password", with: user.password
+		          click_button "Sign in"
+		        end
 
-		      #   describe "after signing in" do
+		        describe "after signing in" do
 
-		      #     it "should render the desired protected page" do
-		      #       page.should have_selector('title', text: 'Guest book')
-		      #     end
-		      #   end
-		      # end
+		          it "should render the desired protected page" do
+		            page.should have_selector('title', text: 'Edit User')
+		          end
+		        end
+		      end
 
 		      describe "in the Users controller" do
 
@@ -140,21 +136,48 @@ describe "UserPages" do
 		          specify { response.should redirect_to(new_user_session_path) }
 		        end
 		      end
+
+		      describe "in the Microposts controller" do
+
+		        describe "submitting to the create action" do
+		          before { post microposts_path }
+		          specify { response.should redirect_to(new_user_session_path) }
+		        end
+
+		        describe "submitting to the destroy action" do
+		          before { delete micropost_path(FactoryGirl.create(:micropost)) }
+		          specify { response.should redirect_to(new_user_session_path) }
+		        end
+		      end
 		    end
 
-		    # describe "as wrong user" do
-		    #   let(:user) { FactoryGirl.create(:user) }
-		    #   let(:wrong_user) { FactoryGirl.create(:user, 
-		    #   											name: "Wrong User",
-		    #   											email: "wrong@example.com") }
-		    #   before {
-		    #   	visit new_user_session_path
-		    #   	fill_in "Email",    with: user.email.upcase
-	     #    	fill_in "Password", with: user.password
-	     #    	click_button "Sign in" }
+		    describe "for signed-in users" do
+		      let(:user) { FactoryGirl.create(:user) }
+		      before do
+		        FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
+		        FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
+		        sign_in user
+		        visit root_path
+		      end
 
-		      
-		    # end
+		      it "should render microposts" do
+		        user.microposts.each do |micropost|
+		          page.should have_selector("li", text: micropost.content)
+		        end
+		      end
+		    end
+
+		    describe "as non-admin user" do
+		      let(:user) { FactoryGirl.create(:user) }
+		      let(:non_admin) { FactoryGirl.create(:user) }
+
+		      before { sign_in non_admin }
+
+		      describe "submitting a DELETE request to the Users#destroy action" do
+		        before { delete '/users' }
+		        specify { response.should redirect_to(new_user_session_path) }
+		      end
+		    end
 		  end
 	  end
   end
@@ -200,8 +223,21 @@ describe "UserPages" do
 
       it { should have_content('error') }
     end
+  end
 
-    
+  describe "home page" do
+    let(:user) { FactoryGirl.create(:user) }
+  	before { sign_in user }
+    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo") }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar") }
+
+    before { visit root_path }
+
+    describe "microposts" do
+      it { should have_content(m1.content) }
+      it { should have_content(m2.content) }
+      it { should have_content(user.microposts.count) }
+    end
   end
 
 end

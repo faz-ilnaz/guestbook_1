@@ -1,15 +1,15 @@
 Guestbook1::Application.routes.draw do
 	devise_for :users
-	# get '/sign_in' => '/users/sign_in'
 	devise_scope :user do
 		get "/sign_in" => "devise/sessions#new"
 	end
 
-	# resources :users
+
 	resources :microposts, only: [:create, :destroy]
 	
 	root 'microposts#show'
 	get '/create'   => 'microposts#create'
+	get '/delete_post'   => 'microposts#destroy'
 	get '/users'    => 'users#index'
 	# The priority is based upon order of creation: first created -> highest priority.
 	# See how all your routes lay out with "rake routes".
