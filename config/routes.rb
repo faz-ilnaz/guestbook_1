@@ -2,8 +2,10 @@ Guestbook1::Application.routes.draw do
 	devise_for :users
 	devise_scope :user do
 		get "/sign_in" => "devise/sessions#new"
+		get "/delete"  =>	"devise/registrations#destroy"
 	end
 
+	resources :users, only: [:destroy]
 
 	resources :microposts, only: [:create, :destroy]
 	
